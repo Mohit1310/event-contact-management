@@ -1,10 +1,42 @@
 {
   "expo": {
-    "scheme": "acme",
-    "plugins": [
-      "expo-router"
-    ],
     "name": "event-contact-management",
-    "slug": "event-contact-management"
+    "slug": "event-contact-management",
+    "version": "1.0.0",
+    "scheme": "acme",
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "experiments": {
+      "tsconfigPaths": true
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ],
+    "orentation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": ["READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"]
+    }
   }
 }
