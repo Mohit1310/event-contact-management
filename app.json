@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "plugins": [
+      "expo-router"
+    ],
+    "name": "event-contact-management",
+    "slug": "event-contact-management"
+  }
+}
