@@ -17,7 +17,7 @@ export default function RootLayout() {
           options={{ title: 'Home', animation: 'none' }}
         />
         <Stack.Screen
-          name="event/[id]/(tabs)"
+          name="event/[id]"
           options={({ route }) => {
             // route.params.id comes as string
             const params = route.params as { id: string } | undefined;
