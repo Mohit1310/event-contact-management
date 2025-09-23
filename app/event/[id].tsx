@@ -5,9 +5,8 @@ import {
   Button,
   FAB,
   Portal,
-  Modal,
-  Provider,
   Dialog,
+  Provider,
   IconButton,
 } from 'react-native-paper';
 import { db } from '@/lib/db';
@@ -25,6 +24,7 @@ export default function Event() {
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMsg, setSnackbarMsg] = useState('');
   const [isEditMode, setIsEditMode] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
 
   // Form state (used in modal)
   const [formVisible, setFormVisible] = useState(false);
@@ -48,25 +48,38 @@ export default function Event() {
     }, [eventId])
   );
 
-  const addContact = () => {
+  const saveContact = () => {
     if (!name.trim()) {
       setSnackbarMsg('Name is required');
       setSnackbarVisible(true);
       return;
     }
 
-    db.runSync(
-      'INSERT INTO contacts (event_id, name, phone, note) VALUES (?, ?, ?, ?)',
-      [eventId, name, phone, note]
-    );
+    if (isEditMode && editingId !== null) {
+      // UPDATE existing
+      db.runSync(
+        'UPDATE contacts SET name = ?, phone = ?, note = ? WHERE id = ?',
+        [name, phone, note, editingId]
+      );
+      setSnackbarMsg('Contact updated');
+    } else {
+      // INSERT new
+      db.runSync(
+        'INSERT INTO contacts (event_id, name, phone, note) VALUES (?, ?, ?, ?)',
+        [eventId, name, phone, note]
+      );
+      setSnackbarMsg('Contact added');
+    }
 
+    // Reset state
     setName('');
     setPhone('');
     setNote('');
     setFormVisible(false);
-    loadContacts();
+    setIsEditMode(false);
+    setEditingId(null);
 
-    setSnackbarMsg('Contact added');
+    loadContacts();
     setSnackbarVisible(true);
   };
 
@@ -114,11 +127,20 @@ export default function Event() {
     setNote(contact.note || '');
     setFormVisible(true);
     setIsEditMode(true);
+    setEditingId(contact.id);
+  };
+
+  const handleDeleteContact = (contactId: number) => {
+    db.runSync('DELETE FROM contacts WHERE id = ?', [contactId]);
+    loadContacts();
+    setSnackbarMsg('Contact deleted');
+    setSnackbarVisible(true);
   };
 
   const handleDialogDismiss = () => {
     setFormVisible(false);
     setIsEditMode(false);
+    setEditingId(null);
     setName('');
     setPhone('');
     setNote('');
@@ -167,7 +189,7 @@ export default function Event() {
             icon={'delete'}
             size={28}
             iconColor="red"
-            onPress={() => {}}
+            onPress={() => handleDeleteContact(item.id)}
           />
         </View>
       </TouchableOpacity>
@@ -209,7 +231,7 @@ export default function Event() {
           onPress={() => setFormVisible(true)}
         />
 
-        {/* Modal for adding a contact */}
+        {/* Modal for adding/editing a contact */}
         <Portal>
           <Dialog visible={formVisible} onDismiss={handleDialogDismiss}>
             <Dialog.Title>{isEditMode ? 'Edit' : 'Add'} Contact</Dialog.Title>
@@ -239,7 +261,7 @@ export default function Event() {
               </Button>
               <Button
                 mode="contained"
-                onPress={addContact}
+                onPress={saveContact}
                 style={{ paddingHorizontal: 8 }}
               >
                 {isEditMode ? 'Save' : 'Add'}
