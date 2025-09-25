@@ -74,6 +74,9 @@ export async function handleDownloadContacts(
   try {
     const fileUri = await saveVCardFile(eventName, contacts);
     if (fileUri) return fileUri;
+    console.log('🚀 ~ handleDownloadContacts ~ fileUri:', fileUri);
+    Alert.alert('Success', 'Contacts downloaded successfully.');
+    return fileUri;
   } catch (err) {
     console.error(err);
     Alert.alert('Error', 'Failed to download contacts.');

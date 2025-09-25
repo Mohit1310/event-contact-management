@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { View, FlatList, Text, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, TouchableOpacity, Alert } from 'react-native';
 import {
   TextInput,
   Button,
@@ -9,7 +9,7 @@ import {
   Provider,
   IconButton,
 } from 'react-native-paper';
-import { db } from '@/lib/db';
+import { db, deleteContact } from '@/lib/db';
 import SnackbarMessage from './components/SnackbarMessage';
 import { Contact } from '@/lib/types';
 import { useLocalSearchParams, useFocusEffect } from 'expo-router';
@@ -128,11 +128,25 @@ export default function Event() {
     setFormVisible(true);
     setIsEditMode(true);
     setEditingId(contact.id);
+    loadContacts();
   };
 
-  const handleDeleteContact = (contactId: number) => {
-    db.runSync('DELETE FROM contacts WHERE id = ?', [contactId]);
-    loadContacts();
+  const handleDelete = async (id: number) => {
+    Alert.alert(
+      'Delete Event',
+      'Are you sure you want to delete this contact?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Yes',
+          style: 'destructive',
+          onPress: async () => {
+            await deleteContact(id);
+            loadContacts();
+          },
+        },
+      ]
+    );
     setSnackbarMsg('Contact deleted');
     setSnackbarVisible(true);
   };
@@ -189,7 +203,7 @@ export default function Event() {
             icon={'delete'}
             size={28}
             iconColor="red"
-            onPress={() => handleDeleteContact(item.id)}
+            onPress={() => handleDelete(item.id)}
           />
         </View>
       </TouchableOpacity>

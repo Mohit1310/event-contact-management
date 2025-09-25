@@ -39,3 +39,7 @@ export async function deleteEvent(id: number) {
 export async function updateEvent(id: number, name: string) {
   return db.runAsync(`UPDATE events SET name = ? WHERE id = ?`, [name, id]);
 }
+
+export async function deleteContact(id: number) {
+  return db.runAsync(`DELETE FROM contacts WHERE id = ?`, [id]);
+}

@@ -17,7 +17,6 @@ export default function SnackbarMessage({
       onDismiss={onDismiss}
       duration={4000}
       action={{ label: 'Close', onPress: onDismiss }}
-      style={{ alignSelf: 'center' }}
     >
       {message}
     </Snackbar>
