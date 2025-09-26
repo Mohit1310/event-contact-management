@@ -8,7 +8,6 @@ import {
   Button,
   TextInput,
   FAB,
-  Card,
 } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { getEvents, deleteEvent, updateEvent, addEvent } from '../lib/db';
@@ -100,11 +99,21 @@ export default function HomeScreen() {
 
   return (
     <View style={{ flex: 1, marginHorizontal: 16, marginTop: 16 }}>
-      <FlatList
-        data={events}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-      />
+      {events.length === 0 ? (
+        <View
+          style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+        >
+          <List.Subheader style={{ fontSize: 20 }}>
+            No events found. Add one!
+          </List.Subheader>
+        </View>
+      ) : (
+        <FlatList
+          data={events}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={renderItem}
+        />
+      )}
 
       {/* Edit Event Dialog */}
       <Portal>
@@ -122,8 +131,20 @@ export default function HomeScreen() {
             />
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setDialogVisible(false)}>Cancel</Button>
-            <Button onPress={saveEdit}>Save</Button>
+            <Button
+              mode="contained-tonal"
+              onPress={() => setDialogVisible(false)}
+              style={{ paddingHorizontal: 8 }}
+            >
+              Cancel
+            </Button>
+            <Button
+              mode="contained"
+              onPress={saveEdit}
+              style={{ paddingHorizontal: 12 }}
+            >
+              Save
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -134,7 +155,7 @@ export default function HomeScreen() {
           visible={addDialogVisible}
           onDismiss={() => setAddDialogVisible(false)}
         >
-          <Dialog.Title>New Events</Dialog.Title>
+          <Dialog.Title>New Event</Dialog.Title>
           <Dialog.Content>
             <TextInput
               label="Event name"
@@ -144,8 +165,20 @@ export default function HomeScreen() {
             />
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setAddDialogVisible(false)}>Cancel</Button>
-            <Button onPress={saveAdd}>Add</Button>
+            <Button
+              mode="contained-tonal"
+              onPress={() => setAddDialogVisible(false)}
+              style={{ paddingHorizontal: 8 }}
+            >
+              Cancel
+            </Button>
+            <Button
+              mode="contained"
+              onPress={saveAdd}
+              style={{ paddingHorizontal: 12 }}
+            >
+              Add
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

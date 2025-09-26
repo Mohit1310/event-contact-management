@@ -1,9 +1,8 @@
 import { Stack } from 'expo-router';
 import { useEffect } from 'react';
 import { db, initDb } from '@/lib/db';
-import { IconButton, Provider as PaperProvider } from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import { Contact, Event } from '@/lib/types';
-import { handleShareContacts } from '@/lib/vcard';
 import ExportButtons from './event/components/ExportButtons';
 import { StatusBar } from 'react-native';
 
@@ -18,7 +17,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen
           name="index"
-          options={{ title: 'Home', animation: 'none' }}
+          options={{ title: 'Event List', animation: 'none' }}
         />
         <Stack.Screen
           name="event/[id]"

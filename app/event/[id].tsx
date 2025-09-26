@@ -8,6 +8,7 @@ import {
   Dialog,
   Provider,
   IconButton,
+  List,
 } from 'react-native-paper';
 import { db, deleteContact } from '@/lib/db';
 import SnackbarMessage from './components/SnackbarMessage';
@@ -232,11 +233,21 @@ export default function Event() {
           </View>
         )}
 
-        <FlatList
-          data={contacts}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={renderItem}
-        />
+        {contacts.length === 0 ? (
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          >
+            <List.Subheader style={{ fontSize: 20 }}>
+              No contacts found. Add one!
+            </List.Subheader>
+          </View>
+        ) : (
+          <FlatList
+            data={contacts}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={renderItem}
+          />
+        )}
 
         {/* Floating Action Button */}
         <FAB

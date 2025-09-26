@@ -6,10 +6,11 @@ import { Contact } from './types';
 /**
  * Build vCard string from contacts array
  */
-export function buildVCard(contacts: Contact[]) {
+export function buildVCard(contacts: Contact[], eventName: string) {
   let vcard = '';
   contacts.forEach((c) => {
-    vcard += `BEGIN:VCARD\nVERSION:3.0\nFN:${c.name}\nTEL;TYPE=CELL:${c.phone}\n`;
+    const name = eventName + ' ' + c.name;
+    vcard += `BEGIN:VCARD\nVERSION:3.0\nFN:${name}\nTEL;TYPE=CELL:${c.phone}\n`;
     if (c.note) vcard += `NOTE:${c.note}\n`;
     vcard += 'END:VCARD\n';
   });
@@ -25,7 +26,7 @@ export async function saveVCardFile(eventName: string, contacts: Contact[]) {
     return null;
   }
 
-  const vcard = buildVCard(contacts);
+  const vcard = buildVCard(contacts, eventName);
   const safeName = (eventName || 'event').replace(/[^a-z0-9_.-]/gi, '_');
   const filename = `${safeName}-contacts.vcf`;
 
